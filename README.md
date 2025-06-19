@@ -1,38 +1,51 @@
-📦 Netrum Lite Node - Local Compute Node Setup
----------------------------------------------
+# 📦 Netrum Lite Node - Local Compute Node Setup
 
-🛠️ Requirements:
+A lightweight decentralized compute node for the Netrum ecosystem.  
+This node generates a unique identity, secure wallet, and connects to Netrum server for compute task requests.
 
-Operating System: Ubuntu 20.04 / 22.04 (Recommended VPS)
-Minimum Specs:
-  - RAM: 4 GB (6 GB recommended)
-  - Disk: 200+ GB (SSD preferred)
-  - CPU: 2+ cores
+---
 
-📥 Required Packages:
+## 🛠️ Requirements
 
-Install all required dependencies using the following command:
+**Recommended System (VPS):**
+- OS: Ubuntu 20.04 / 22.04
+- RAM: 4 GB (6 GB recommended)
+- Disk: 200+ GB SSD
+- CPU: 2+ cores
 
+---
+
+## 📥 Required Packages
+
+Install dependencies:
+
+```bash
 sudo apt update && sudo apt install -y curl bc jq nodejs npm
+```
 
-⚠️ Node.js Version Required: v16.x or v18.x (LTS recommended)
+### Install Node.js v18 (recommended):
 
-To install Node.js v18 (recommended):
-
+```bash
 curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
 sudo apt install -y nodejs
+```
 
-Verify installation:
-node -v   ➤ should be v18.x.x
-npm -v    ➤ should be 8.x.x or above
+### Check versions:
 
-Then, install `ethers.js` (inside the wallet folder):
+```bash
+node -v   # ➤ should be v18.x.x
+npm -v    # ➤ should be 8.x.x or above
+```
 
+### Install `ethers.js` (inside wallet folder):
+
+```bash
 cd src/wallet
 npm init -y
 npm install ethers
+```
 
-🔧 Folder Structure:
+## 🔧 Folder Structure
 
 netrum-lite-node/
 ├── init.sh                      <-- Node ID + Wallet generator (run first)
@@ -54,45 +67,69 @@ netrum-lite-node/
 │   └── mining/
 │       └── request-mining.sh    <-- Mining slot requester
 
-🚀 How to Start the Node:
 
-1. Clone or copy the files into your VPS.
+## 🚀 How to Start the Node
 
-2. Make both scripts executable:
-   chmod +x init.sh
-   chmod +x start.sh
+### Step 1: Make Scripts Executable
 
-3. Run initialization (generates wallet + node ID):
-   ./init.sh
+```bash
+chmod +x init.sh
+chmod +x start.sh
+```
 
-   This will:
-   - Generate a secure wallet
-   - Create a persistent Node ID
-   - Save all identity files in `data/` folder
-   - Show you your wallet address and node ID
+### Step 2: Initialize the Node
 
-4. Start the node:
-   ./start.sh
+```bash
+./init.sh
+```
 
-   This will:
-   - Load the identity and wallet
-   - Check system requirements
-   - Connect to Netrum server
-   - Request mining slot
+✅ This will:
 
-✅ What It Does:
+ - Generate a secure EVM wallet
 
-- Generates a secure EVM wallet (address + private key stored locally)
-- Generates a persistent Node ID (format: NetrumLite-xxxxxxxxxxxxxx)
-- Runs full system check (RAM, Disk, CPU)
-- Connects to dummy server endpoint
-- Sends request to simulate mining
+ - Create a persistent Node ID
 
-📁 Notes:
+ - Save both in data/ folder
 
-- Wallet file is saved locally at: data/wallet/key.txt
-- Node ID is saved at: data/node/id.txt
-- Private key never leaves the VPS (full user control)
-- Server connection is currently a placeholder (to be replaced with real endpoints)
+ - Display your wallet address and Node ID
 
-👤 Author: Netrum Team
+
+### Step 3: Start the Node
+
+```bash
+./start.sh
+```
+
+✅ This will:
+
+ - Load wallet + Node ID
+
+ - Check system requirements
+
+ - Connect to Netrum server (stub)
+
+ - Request a mining slot
+
+
+### ✅ What It Does
+
+ - 🔐 Generates secure EVM wallet (locally stored)
+
+ - 🆔 Creates unique Node ID (NetrumLite-xxxxxxxxxx)
+
+ - 📊 Checks RAM, Disk, CPU
+
+ - 🌐 Connects to Netrum server (placeholder)
+
+ - ⛏️ Sends request to simulate mining
+
+
+### 📁 Notes
+
+ - Wallet saved at: data/wallet/key.txt
+
+ - Node ID saved at: data/node/id.txt
+
+ - Private key stays local — never sent externally
+
+ - Server endpoints are dummy for now (to be upgraded)
