@@ -1,7 +1,7 @@
-# 📦 Netrum Lite Node - Local Compute Node Setup
+# 📦 Netrum Lite Node Setup
 
 A lightweight decentralized compute node for the Netrum ecosystem.  
-This node generates a unique identity, secure wallet, and connects to Netrum server for compute task requests.
+This node generates a unique identity, secure wallet, and connects to Netrum server for mining task requests.
 
 ---
 
