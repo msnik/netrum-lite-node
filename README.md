@@ -47,6 +47,7 @@ npm install ethers
 
 ## 🔧 Folder Structure
 
+```bash
 netrum-lite-node/
 ├── init.sh                      <-- Node ID + Wallet generator (run first)
 ├── start.sh                     <-- Main runner script
@@ -67,6 +68,7 @@ netrum-lite-node/
 │   └── mining/
 │       └── request-mining.sh    <-- Mining slot requester
 
+```
 
 ## 🚀 How to Start the Node
 
