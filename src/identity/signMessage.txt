@@ -1,0 +1,4 @@
+Netrum Node Register Sign
+PublicKey: 0x97528019856b29E1538E7B65068334BC84922Cb8
+NodeID: netrumlite_e4ff9a32984f6df302d9bff38e7f2b17
+Timestamp: 1751113434

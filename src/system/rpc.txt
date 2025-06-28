@@ -1,0 +1,2 @@
+CHAIN_ID=84532
+RPC_URL=https://base-sepolia.g.alchemy.com/v2/rAN4R_MIKd704_Ow--uMuGp2m4q2Nxtt
