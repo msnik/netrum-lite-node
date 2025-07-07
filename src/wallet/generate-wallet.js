@@ -1,6 +1,12 @@
-const { ethers } = require("ethers");
-const fs = require("fs");
-const path = require("path");
+import { ethers } from "ethers";
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+
+// Get current module path
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 // Create wallet
 const wallet = ethers.Wallet.createRandom();

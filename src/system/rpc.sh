@@ -2,27 +2,43 @@
 
 # === RPC Configuration Script ===
 
+# Paths
 RPC_FILE="src/system/rpc.txt"
+CHAIN_FILE="src/system/chainid.txt"
 
-# 📦 Default values (Base Sepolia)
-DEFAULT_CHAIN_ID=84532
-DEFAULT_RPC_URL="https://base-sepolia.g.alchemy.com/v2/rAN4R_MIKd704_Ow--uMuGp2m4q2Nxtt"
+# 🔗 Base Sepolia Defaults
+DEFAULT_RPC_URL="https://sepolia.base.org"
+DEFAULT_CHAIN_ID="84532"
 
-# ✅ Create file if not exists
+# === Create folder if missing
+mkdir -p src/system
+
+# === Create RPC file if not exists
 if [ ! -f "$RPC_FILE" ]; then
-  echo "🔌 RPC config not found. Creating default..."
-  mkdir -p src/system
-  echo "CHAIN_ID=$DEFAULT_CHAIN_ID" > "$RPC_FILE"
-  echo "RPC_URL=$DEFAULT_RPC_URL" >> "$RPC_FILE"
-  echo "✅ Created RPC config at $RPC_FILE"
+  echo "🔌 RPC URL not found. Setting default..."
+  echo "$DEFAULT_RPC_URL" > "$RPC_FILE"
+  echo "✅ Created RPC URL at $RPC_FILE"
 else
-  echo "🌐 Found existing RPC config:"
+  echo "🌍 RPC URL already set:"
   cat "$RPC_FILE"
 fi
 
-# 🎯 Load values into environment variables
-export CHAIN_ID=$(grep "CHAIN_ID=" "$RPC_FILE" | cut -d'=' -f2)
-export RPC_URL=$(grep "RPC_URL=" "$RPC_FILE" | cut -d'=' -f2)
+# === Create Chain ID file if not exists
+if [ ! -f "$CHAIN_FILE" ]; then
+  echo "🆔 Chain ID not found. Setting default..."
+  echo "$DEFAULT_CHAIN_ID" > "$CHAIN_FILE"
+  echo "✅ Created Chain ID at $CHAIN_FILE"
+else
+  echo "🧩 Chain ID already set:"
+  cat "$CHAIN_FILE"
+fi
 
-echo "🔗 Using Chain ID: $CHAIN_ID"
-echo "🌍 Using RPC URL:  $RPC_URL"
+# === Export for current session
+export RPC_URL=$(cat "$RPC_FILE")
+export CHAIN_ID=$(cat "$CHAIN_FILE")
+
+# === Summary
+echo ""
+echo "🚀 Current RPC Configuration:"
+echo "🌐 RPC URL:  $RPC_URL"
+echo "🆔 Chain ID: $CHAIN_ID"

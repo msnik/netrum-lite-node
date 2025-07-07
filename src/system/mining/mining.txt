@@ -1,0 +1,17 @@
+[Unit]
+Description=Netrum Node Mining Synchronization Service
+After=network.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/root/netrum-lite-node
+ExecStart=/usr/bin/node /root/netrum-lite-node/src/system/mining/mining.js
+Restart=always
+RestartSec=30
+Environment=NODE_ENV=production
+StandardOutput=file:/var/log/netrum-mining.log
+StandardError=file:/var/log/netrum-mining.error.log
+
+[Install]
+WantedBy=multi-user.target
