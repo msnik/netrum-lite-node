@@ -127,7 +127,7 @@ async function submitTransaction(privateKey, tx) {
   const provider = new ethers.JsonRpcProvider(RPC_URL);
   const signer = new ethers.Wallet(privateKey, provider);
   const txResponse = await signer.sendTransaction(tx);
-  const msg = `✅ TX submitted: https://sepolia.basescan.org/tx/${txResponse.hash}`;
+  const msg = `✅ TX submitted: https://basescan.org/tx/${txResponse.hash}`;
   syslog(msg);
   console.log(msg);
 }
