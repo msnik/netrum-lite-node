@@ -8,40 +8,43 @@ import { dirname } from "path";
 
 // ── Helpers ──────────────────────────────────────────────
 const __filename = fileURLToPath(import.meta.url);
-const __dirname  = dirname(__filename);
+const __dirname = dirname(__filename);
 
 const askHidden = (question) =>
   new Promise((resolve) => {
     const rl = readline.createInterface({
-      input:  process.stdin,
+      input: process.stdin,
       output: process.stdout,
-      terminal: true
     });
 
-    // Hide every keystroke
+    // Hide every keystroke with asterisks
     rl.stdoutMuted = true;
-    rl._writeToOutput = function () {
-      /* no-echo */   // comment this out if you prefer to see asterisks: rl.output.write("*");
+    rl._writeToOutput = function (_stringToWrite, key) {
+      if (rl.stdoutMuted) {
+        rl.output.write("*");
+      } else {
+        rl.output.write(key);
+      }
     };
 
     rl.question(question, (answer) => {
       rl.close();
-      console.log();     // move to a new line
+      console.log(); // move to a new line
       resolve(answer.trim());
     });
   });
 
 // ── Main ────────────────────────────────────────────────
 (async function run() {
-  const privateKey = await askHidden("Enter private key (must start with 0x): ");
+  let privateKey = await askHidden("Enter private key: ");
 
+  // Add 0x prefix if not present
   if (!privateKey.startsWith("0x")) {
-    console.error("❌ Private key must start with '0x'. Exiting.");
-    process.exit(1);
+    privateKey = "0x" + privateKey;
   }
 
   try {
-    const wallet     = new Wallet(privateKey);
+    const wallet = new Wallet(privateKey);
     const walletData = JSON.stringify(
       { address: wallet.address, privateKey: wallet.privateKey },
       null,
@@ -61,7 +64,6 @@ const askHidden = (question) =>
     // Log results
     console.log("✅ Wallet imported successfully:");
     console.log("Address:     ", wallet.address);
-    console.log("Private Key: ", wallet.privateKey);
     console.log(`📁 Saved to: ${dataPath}`);
     console.log(`📁 Saved to: ${localPath}`);
   } catch (err) {
