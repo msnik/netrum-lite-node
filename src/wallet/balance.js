@@ -22,56 +22,74 @@ const ERC20_ABI = [
 // === Path to key.txt in this folder
 const keyFilePath = path.join(__dirname, 'key.txt');
 
-// === Load wallet from key file
+// === Load wallet from key file with better error handling
 function getWalletFromKeyFile() {
-  if (!fs.existsSync(keyFilePath)) {
-    console.error("❌ key.txt not found at:", keyFilePath);
-    process.exit(1);
-  }
-
-  const fileContent = fs.readFileSync(keyFilePath, 'utf8');
-
   try {
-    const { privateKey } = JSON.parse(fileContent);
-    return new ethers.Wallet(privateKey);
-  } catch (e) {
-    try {
-      return new ethers.Wallet(fileContent.trim());
-    } catch (err) {
-      console.error("❌ Invalid key file format.");
-      process.exit(1);
+    if (!fs.existsSync(keyFilePath)) {
+      throw new Error("Wallet file not found");
     }
-  }
-}
 
-// === Check balance (ETH + NPT)
-async function checkBalance() {
-  const wallet = getWalletFromKeyFile();
-  const provider = new ethers.JsonRpcProvider(RPC_URL);
-  const address = wallet.address;
+    const fileContent = fs.readFileSync(keyFilePath, 'utf8');
+    const walletData = JSON.parse(fileContent);
 
-  // === ETH balance
-  const balanceWei = await provider.getBalance(address);
-  const balanceEth = parseFloat(ethers.formatEther(balanceWei));
+    if (!walletData.privateKey) {
+      throw new Error("Invalid wallet format");
+    }
 
-  // === NPT balance
-  const tokenContract = new ethers.Contract(NPT_CONTRACT_ADDRESS, ERC20_ABI, provider);
-  const decimals = await tokenContract.decimals();
-  const tokenBalanceRaw = await tokenContract.balanceOf(address);
-  const tokenBalance = parseFloat(ethers.formatUnits(tokenBalanceRaw, decimals));
-
-  // === Display
-  console.log(`Address       : ${address}`);
-  console.log(`ETH Balance   : ${balanceEth} ETH`);
-  console.log(`NPT Balance   : ${tokenBalance} NPT`);
-
-  // Optional: ETH balance check
-  if (balanceEth < MINIMUM_BALANCE) {
-    console.error(`❌ ETH too low (< ${MINIMUM_BALANCE}). Please fund wallet.`);
+    return new ethers.Wallet(walletData.privateKey);
+  } catch (error) {
+    console.error("❌ Error loading wallet:");
+    console.error("   - Make sure you've created or imported a wallet first");
+    console.error("   - If importing, ensure you're using the correct format");
     process.exit(1);
-  } else {
-    console.log(`✅ ETH balance is sufficient.`);
   }
 }
 
-checkBalance();
+// === Check balance (ETH + NPT) with better formatting
+async function checkBalance() {
+  try {
+    const wallet = getWalletFromKeyFile();
+    const provider = new ethers.JsonRpcProvider(RPC_URL);
+    const address = wallet.address;
+
+    console.log("\n🔹 Checking balances...\n");
+
+    // === ETH balance
+    const balanceWei = await provider.getBalance(address);
+    const balanceEth = parseFloat(ethers.formatEther(balanceWei));
+
+    // === NPT balance
+    const tokenContract = new ethers.Contract(NPT_CONTRACT_ADDRESS, ERC20_ABI, provider);
+    const [decimals, tokenBalanceRaw] = await Promise.all([
+      tokenContract.decimals(),
+      tokenContract.balanceOf(address)
+    ]);
+    const tokenBalance = parseFloat(ethers.formatUnits(tokenBalanceRaw, decimals));
+
+    // === Display with better formatting
+    console.log(`📋 Wallet Summary:`);
+    console.log(`├─ Address: ${address}`);
+    console.log(`├─ ETH Balance: ${balanceEth.toFixed(6)} ETH`);
+    console.log(`└─ NPT Balance: ${tokenBalance.toFixed(2)} NPT`);
+
+    // Balance check with color indication
+    if (balanceEth < MINIMUM_BALANCE) {
+      console.log(`\n⚠️  Warning: ETH balance is low (< ${MINIMUM_BALANCE} ETH)`);
+      console.log("   Consider adding more ETH to your wallet");
+    } else {
+      console.log(`\n✅ ETH balance is sufficient`);
+    }
+
+  } catch (error) {
+    console.error("\n❌ Error checking balances:");
+    console.error(error.message);
+    process.exit(1);
+  }
+}
+
+// Check if running directly (not being imported)
+if (process.argv[1] === fileURLToPath(import.meta.url)) {
+  // Check for --no-prompt flag if needed
+  const noPrompt = process.argv.includes('--no-prompt');
+  checkBalance();
+}
