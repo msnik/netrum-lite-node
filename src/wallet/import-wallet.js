@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 import { Wallet } from "ethers";
 import fs from "fs";
 import path from "path";
@@ -5,59 +6,66 @@ import readline from "readline";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
 
-// Get current file directory
+// ── Helpers ──────────────────────────────────────────────
 const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+const __dirname  = dirname(__filename);
 
-// Read private key from user
-const rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout,
-});
+const askHidden = (question) =>
+  new Promise((resolve) => {
+    const rl = readline.createInterface({
+      input:  process.stdin,
+      output: process.stdout,
+      terminal: true
+    });
 
-const ask = (question) =>
-  new Promise((resolve) => rl.question(question, resolve));
+    // Hide every keystroke
+    rl.stdoutMuted = true;
+    rl._writeToOutput = function () {
+      /* no-echo */   // comment this out if you prefer to see asterisks: rl.output.write("*");
+    };
 
-const run = async () => {
-  const privateKey = await ask("?? Set Private key (must start with 0x): ");
-  rl.close();
+    rl.question(question, (answer) => {
+      rl.close();
+      console.log();     // move to a new line
+      resolve(answer.trim());
+    });
+  });
+
+// ── Main ────────────────────────────────────────────────
+(async function run() {
+  const privateKey = await askHidden("Enter private key (must start with 0x): ");
 
   if (!privateKey.startsWith("0x")) {
-    console.error("❌ Private key must start with '0x'");
-    return;
+    console.error("❌ Private key must start with '0x'. Exiting.");
+    process.exit(1);
   }
 
   try {
-    const wallet = new Wallet(privateKey.trim());
-
-    console.log("✅ Wallet Imported:");
-    console.log("Address:", wallet.address);
-    console.log("Private Key:", wallet.privateKey);
-
+    const wallet     = new Wallet(privateKey);
     const walletData = JSON.stringify(
-      {
-        address: wallet.address,
-        privateKey: wallet.privateKey,
-      },
+      { address: wallet.address, privateKey: wallet.privateKey },
       null,
       2
     );
 
-    // ✅ Save to data/wallet/key.txt
+    // Path 1: ../../data/wallet/key.txt
     const dataDir = path.join(__dirname, "../../data/wallet");
-    if (!fs.existsSync(dataDir)) {
-      fs.mkdirSync(dataDir, { recursive: true });
-    }
-    fs.writeFileSync(path.join(dataDir, "key.txt"), walletData);
-    console.log(`?? Saved to ${path.join(dataDir, "key.txt")}`);
+    if (!fs.existsSync(dataDir)) fs.mkdirSync(dataDir, { recursive: true });
+    const dataPath = path.join(dataDir, "key.txt");
+    fs.writeFileSync(dataPath, walletData);
 
-    // ✅ Also save to src/wallet/key.txt
-    fs.writeFileSync(path.join(__dirname, "key.txt"), walletData);
-    console.log(`?? Also saved to ${path.join(__dirname, "key.txt")}`);
+    // Path 2: ./key.txt (same folder as script)
+    const localPath = path.join(__dirname, "key.txt");
+    fs.writeFileSync(localPath, walletData);
 
+    // Log results
+    console.log("✅ Wallet imported successfully:");
+    console.log("Address:     ", wallet.address);
+    console.log("Private Key: ", wallet.privateKey);
+    console.log(`📁 Saved to: ${dataPath}`);
+    console.log(`📁 Saved to: ${localPath}`);
   } catch (err) {
     console.error("❌ Invalid private key. Please try again.");
+    process.exit(1);
   }
-};
-
-run();
+})();
