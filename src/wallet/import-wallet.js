@@ -4,92 +4,61 @@ import fs from "fs";
 import path from "path";
 import readline from "readline";
 import { fileURLToPath } from "url";
-import { dirname } from "path";
 
 const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+const __dirname = path.dirname(__filename);
 
-const askQuestion = (question, hidden = false) => new Promise((resolve) => {
+// Simple input method that works on all systems
+const ask = (question) => {
   const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout
   });
-
-  if (hidden) {
-    const stdin = process.openStdin();
-    process.stdin.on('data', (char) => {
-      const str = char.toString();
-      if (str === '\r' || str === '\n') return;
-      readline.cursorTo(process.stdout, 0);
-      readline.clearLine(process.stdout, 0);
+  return new Promise((resolve) => {
+    rl.question(question, (answer) => {
+      rl.close();
+      resolve(answer.trim());
     });
-  }
-
-  rl.question(question, (answer) => {
-    rl.close();
-    if (hidden) console.log(); // New line after hidden input
-    resolve(answer.trim());
   });
-});
+};
 
-(async function run() {
+(async () => {
   try {
-    console.log("🔐 Ethereum Wallet Setup");
+    console.log("\n🔐 Import Wallet");
+    console.log("---------------------");
     
-    // Get private key (try both methods)
-    let privateKey;
-    try {
-      privateKey = await askQuestion(
-        "Enter private key (64 hex chars, no 0x): ", 
-        true
-      );
-    } catch {
-      console.log("\nFalling back to visible input...");
-      privateKey = await askQuestion(
-        "Enter private key (64 hex chars, no 0x): ",
-        false
-      );
-    }
+    // Get private key (with or without 0x prefix)
+    const privateKey = await ask("Enter your private key: ");
+    
+    // Clean the key
+    const cleanKey = privateKey.startsWith('0x') 
+      ? privateKey.slice(2) 
+      : privateKey;
 
-    // Validate
-    if (!privateKey || privateKey.length !== 64 || !/^[a-fA-F0-9]+$/.test(privateKey)) {
-      throw new Error("Invalid private key - must be 64 hexadecimal characters without 0x prefix");
+    // Validation
+    if (cleanKey.length !== 64 || !/^[a-f0-9]+$/i.test(cleanKey)) {
+      throw new Error("Invalid private key - must be 64 hexadecimal characters");
     }
 
     // Create wallet
-    const wallet = new Wallet(privateKey);
+    const wallet = new Wallet(cleanKey);
+    console.log("\n✅ Wallet successfully verified");
+    console.log(`Address: ${wallet.address}`);
+
+    // Prepare data
     const walletData = {
       address: wallet.address,
-      privateKey: privateKey,
-      createdAt: new Date().toISOString()
+      privateKey: cleanKey,
+      importedAt: new Date().toISOString()
     };
 
-    // Prepare save locations
-    const saveDir = path.join(__dirname, "../../data/wallet");
-    const savePaths = [
-      path.join(saveDir, "wallet.json"),
-      path.join(__dirname, "wallet-backup.json")
-    ];
-
-    // Ensure directory exists
-    if (!fs.existsSync(saveDir)) {
-      fs.mkdirSync(saveDir, { recursive: true });
-    }
-
-    // Save files
-    savePaths.forEach(filePath => {
-      fs.writeFileSync(
-        filePath,
-        JSON.stringify(walletData, null, 2),
-        { mode: 0o600 } // Secure file permissions
-      );
-      console.log(`✓ Saved to ${filePath}`);
-    });
-
-    console.log("\nWallet created successfully!");
-    console.log(`Address: ${wallet.address}`);
-    console.log(`Private Key: *****${privateKey.slice(-4)}`);
-    console.log("\n⚠️  Keep your private key secure!");
+    // Save to key.txt (compatible with main wallet.js)
+    const keyFilePath = path.join(__dirname, 'key.txt');
+    fs.writeFileSync(keyFilePath, JSON.stringify(walletData, null, 2));
+    
+    console.log("\n🔏 Wallet successfully imported!");
+    console.log(`Location: ${keyFilePath}`);
+    console.log("\n⚠️ Keep your private key secure!");
 
   } catch (error) {
     console.error("\n❌ Error:", error.message);
