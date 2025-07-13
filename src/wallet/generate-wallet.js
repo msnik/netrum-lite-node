@@ -10,22 +10,26 @@ const __dirname = dirname(__filename);
 
 // Create wallet
 const wallet = ethers.Wallet.createRandom();
-
-console.log("🆕 New Wallet Created:");
+console.log("?? New Wallet Created:");
 console.log("Address: ", wallet.address);
 console.log("Private Key: ", wallet.privateKey);
 
-// Save to data/wallet/key.txt
-const dirPath = path.join(__dirname, "../../data/wallet");
-const filePath = path.join(dirPath, "key.txt");
-
-if (!fs.existsSync(dirPath)) {
-  fs.mkdirSync(dirPath, { recursive: true });
-}
-
-fs.writeFileSync(filePath, JSON.stringify({
+// Prepare file data
+const walletData = JSON.stringify({
   address: wallet.address,
   privateKey: wallet.privateKey
-}, null, 2));
+}, null, 2);
 
-console.log(`📁 Saved to ${filePath}`);
+// ✅ Path 1: Save to data/wallet/key.txt
+const dataDirPath = path.join(__dirname, "../../data/wallet");
+const dataFilePath = path.join(dataDirPath, "key.txt");
+if (!fs.existsSync(dataDirPath)) {
+  fs.mkdirSync(dataDirPath, { recursive: true });
+}
+fs.writeFileSync(dataFilePath, walletData);
+console.log(`?? Saved to ${dataFilePath}`);
+
+// ✅ Path 2: Save to src/wallet/key.txt (same folder)
+const localFilePath = path.join(__dirname, "key.txt");
+fs.writeFileSync(localFilePath, walletData);
+console.log(`?? Also saved to ${localFilePath}`);

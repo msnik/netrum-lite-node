@@ -5,114 +5,61 @@ import fs from 'fs';
 import diskusage from 'diskusage';
 
 const API_URL = 'https://api.netrumlabs.com/api/node/metrics/sync/';
-const LOG_FILE = '/var/log/netrum-node.log';
-const SYNC_INTERVAL = 5000; // 5 seconds
-let nodeStatus = 'Pending'; // Track node status globally
+const SYNC_INTERVAL = 5000;
 
-// Fixed requirements for Lite node
-const NODE_REQUIREMENTS = {
-  RAM: 4,       // 4GB
-  CORES: 2,     // 2 CPU cores
-  STORAGE: 50  // 50GB
-};
+process.stdout._handle.setBlocking(true);
+process.stderr._handle.setBlocking(true);
 
-// Logging function
+// === Helper to Print Logs to systemd ===
 function log(message) {
-  const timestamp = new Date().toLocaleString('en-IN', {
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit',
-    hour12: true
-  }).toLowerCase();
-  
-  const logMessage = `[${timestamp}] ${message}`;
-  fs.appendFileSync(LOG_FILE, logMessage + '\n');
-  console.log(logMessage);
+  // Use stderr which systemd shows by default
+  process.stderr.write(`[${new Date().toISOString()}] ${message}\n`);
 }
 
-// Check system resources and requirements
-function getSystemStatus() {
+function checkSystem() {
   try {
-    const actualCores = os.cpus().length;
-    const actualRamGB = os.totalmem() / (1024 ** 3);
-    const actualStorageGB = diskusage.checkSync('/').free / (1024 ** 3);
-
-    const meetsRequirements = actualCores >= NODE_REQUIREMENTS.CORES && 
-                            actualRamGB >= NODE_REQUIREMENTS.RAM && 
-                            actualStorageGB >= NODE_REQUIREMENTS.STORAGE;
+    const cores = os.cpus().length;
+    const ram = os.totalmem() / (1024 ** 3);
+    const storage = diskusage.checkSync('/').free / (1024 ** 3);
 
     return {
-      meetsRequirements,
-      actualCores,
-      actualRamGB,
-      actualStorageGB,
-      metrics: {
-        cpu: NODE_REQUIREMENTS.CORES,
-        ram: NODE_REQUIREMENTS.RAM,
-        storage: NODE_REQUIREMENTS.STORAGE,
-        nodeStatus // Include current node status in metrics
-      }
+      nodeMetrics: cores >= 2 && ram >= 4 && storage >= 50,
+      nodeStatus: (cores >= 2 && ram >= 4 && storage >= 50) ? 'Active' : 'InActive'
     };
-  } catch (error) {
-    log(`Error checking system status: ${error.message}`);
-    return { 
-      meetsRequirements: false,
-      metrics: null 
+  } catch {
+    return {
+      nodeMetrics: false,
+      nodeStatus: 'InActive' 
     };
   }
 }
 
-// Sync node status with server
 async function syncWithServer() {
   try {
-    const nodeId = fs.readFileSync('../../../data/node/id.txt', 'utf8').trim();
-    const walletPath = fs.readFileSync('../../../data/wallet/key.txt', 'utf8').trim();;
-    const walletdata = JSON.parse(walletPath);
-    const walletAddress = walletdata.address
-    const systemStatus = getSystemStatus();
-
-    if (!systemStatus.meetsRequirements || !systemStatus.metrics) {
-      nodeStatus = 'InActive';
-      log(`System doesn't meet minimum requirements or error occurred`);
-      return;
-    }
-
+    const nodeId = fs.readFileSync('../../identity/node-id/id.txt', 'utf8').trim();
+    const { nodeMetrics, nodeStatus } = checkSystem();
+    
     const response = await axios.post(API_URL, {
       nodeId,
-      walletAddress,
-      nodeType: 'Lite',
-      metrics: systemStatus.metrics,
-      status: nodeStatus, // Send current node status
-      timestamp: new Date().toISOString()
-    }, { timeout: 5000 });
+      nodeMetrics, 
+      nodeStatus
+    });
 
-    // Update status based on server response
-    nodeStatus = response.data.success ? 'Active' : 'InActive';
-    log(`Sync successful | Status: ${nodeStatus} | Metrics sent: ${JSON.stringify(systemStatus.metrics)}`);
-    log(`Actual system - CPU: ${systemStatus.actualCores} | RAM: ${systemStatus.actualRamGB.toFixed(2)}GB | Storage: ${systemStatus.actualStorageGB.toFixed(2)}GB`);
-
+    if (response.data.log) {
+      log(response.data.log);
+    }
   } catch (error) {
-    nodeStatus = 'InActive';
-    log(`Sync failed: ${error.message}`);
+    if (error.response?.data?.error === 'Not Registered') {
+      log('Not Registered');
+    }
   }
 }
 
-// Main execution
-log('Netrum Lite Node Service Started');
-log(`Node Requirements: ${NODE_REQUIREMENTS.CORES} cores, ${NODE_REQUIREMENTS.RAM}GB RAM, ${NODE_REQUIREMENTS.STORAGE}GB storage`);
+// === Startup Log + Run Loop ===
+log('?? Netrum Node Sync Service started');
 
 // Initial sync
 syncWithServer();
 
-// Regular sync every 5 seconds
-const syncInterval = setInterval(syncWithServer, SYNC_INTERVAL);
-
-// Handle process termination
-process.on('SIGINT', () => {
-  clearInterval(syncInterval);
-  log('Service stopped');
-  process.exit();
-});
+// Periodic sync
+setInterval(syncWithServer, SYNC_INTERVAL);

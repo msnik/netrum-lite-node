@@ -5,24 +5,22 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 
 // Required for Node.js fetch
-import 'dotenv/config';
 const fetch = global.fetch || (await import('node-fetch')).default;
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// ✅ Configuration
+// ✅  Configuration
 const RPC_URL = "https://mainnet.base.org/";
-const API_URL = "https://api.netrumlabs.com/api/node/register-node/register-abi";
-const CONTRACT_ADDRESS = "0xEAC8bd594bf109D48224b960269bDF6B10eE0CDA";
-const LITE_NODE_FEE_WEI = BigInt("500000000000000");
+const API_URL = "https://api.netrumlabs.com/api/node/register-node/register-api"; // FIX THIS URL
+const CONTRACT_ADDRESS = "0x23b67235Cf602CC6793C45dA86E6DB2246220702";
 
-// ✅ File Paths
-const walletFilePath = path.resolve(__dirname, '../../data/wallet/key.txt');
-const signMessagePath = path.resolve(__dirname, '../../src/identity/signMessage.txt');
-const txHashPath = path.resolve(__dirname, '../../data/tx-hash.txt');
+// ✅  File Paths
+const walletFilePath = path.resolve(__dirname, '../wallet/key.txt');
+const signMessagePath = path.resolve(__dirname, '../identity/sign/signMsg.txt');
+const txHashPath = path.resolve(__dirname, '../node-lite/register-tx-hash.txt');
 
-// ✅ Helpers
+// ✅  Helpers
 function getField(textLines, key) {
   const line = textLines.find(line => line.startsWith(key));
   if (!line) throw new Error(`Field ${key} not found`);
@@ -42,29 +40,28 @@ async function checkIfRegistered(signerAddress) {
 
 async function registerLiteNode() {
   try {
-    // 1. ?? Load Wallet
+    // 1. Load Wallet
     const walletContent = fs.readFileSync(walletFilePath, "utf8").trim();
     const privateKey = walletContent.startsWith('{')
       ? JSON.parse(walletContent).privateKey
       : walletContent;
-
     const provider = new ethers.JsonRpcProvider(RPC_URL);
     const wallet = new ethers.Wallet(privateKey, provider);
 
-    // 2. ?? Load Signature File
+    // 2. Load Signature File
     const signText = fs.readFileSync(signMessagePath, 'utf8').split('\n');
     const nodeId = getField(signText, "NodeID");
     const signerAddress = getField(signText, "SignerAddress");
     const timestamp = parseInt(getField(signText, "Timestamp"));
     const signature = getField(signText, "Signature");
 
-    // 3. ?? Check if already registered
+    // 3. Check if already registered
     if (await checkIfRegistered(signerAddress)) {
       console.log("ℹ️ This address is already registered");
       return { alreadyRegistered: true };
     }
 
-    // 4. ??️ Get encoded data
+    // 4. Get encoded data from API
     console.log("?? Preparing registration...");
     const response = await fetch(API_URL, {
       method: 'POST',
@@ -78,26 +75,30 @@ async function registerLiteNode() {
       })
     });
 
-    const data = await response.json();
-    if (!response.ok) throw new Error(data.error || 'Server error');
+    // First check if response is OK
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('API Error Response:', errorText);
+      throw new Error(`API request failed with status ${response.status}`);
+    }
 
-    // 5. ?? Send transaction
+    // Then try to parse as JSON
+    const data = await response.json();
+    
+    // 5. Send transaction with fee from API
     console.log("?? Sending transaction...");
     const tx = await wallet.sendTransaction({
-      to: data.contractAddress,
+      to: CONTRACT_ADDRESS, // Use the contract address directly
       data: data.encodedData,
       gasLimit: BigInt(data.estimatedGas),
-      value: LITE_NODE_FEE_WEI
+      value: BigInt(data.feeWei) // Use fee from API response
     });
 
     console.log("⏳ Waiting for confirmation...");
     await tx.wait();
-
     console.log("✅ Registration successful!");
     fs.writeFileSync(txHashPath, tx.hash);
-
     return { success: true, txHash: tx.hash };
-
   } catch (error) {
     console.error("❌ Error:", error.message);
     if (error.message.includes("Already Lite registered")) {

@@ -5,13 +5,19 @@ After=network.target
 [Service]
 Type=simple
 User=root
-WorkingDirectory=/root/netrum-lite-node
+WorkingDirectory=/root/netrum-lite-node/src/system/sync
 ExecStart=/usr/bin/node /root/netrum-lite-node/src/system/sync/service.js
 Restart=always
-RestartSec=30
+# Critical logging settings:
+StandardOutput=journal
+StandardError=journal
 Environment=NODE_ENV=production
-StandardOutput=file:/var/log/netrum-node.log
-StandardError=file:/var/log/netrum-node.error.log
+# Force immediate logging (no buffering):
+Environment=PYTHONUNBUFFERED=1
+Environment=NODE_ENV=production
+# Disable any rate limiting:
+LogRateLimitIntervalSec=0
+LogRateLimitBurst=0
 
 [Install]
 WantedBy=multi-user.target

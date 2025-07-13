@@ -6,12 +6,17 @@ After=network.target
 Type=simple
 User=root
 WorkingDirectory=/root/netrum-lite-node
-ExecStart=/usr/bin/node /root/netrum-lite-node/src/system/mining/mining.js
+ExecStart=/usr/bin/node /root/netrum-lite-node/src/system/mining/start-mining.js
 Restart=always
-RestartSec=30
 Environment=NODE_ENV=production
-StandardOutput=file:/var/log/netrum-mining.log
-StandardError=file:/var/log/netrum-mining.error.log
+Environment=PYTHONUNBUFFERED=1  # Affects some Node.js versions
+StandardOutput=journal
+StandardError=journal
+# Disable all rate limiting
+LogRateLimitIntervalSec=0
+LogRateLimitBurst=0
+# Force immediate flushing
+LogLevelMax=debug
 
 [Install]
 WantedBy=multi-user.target
