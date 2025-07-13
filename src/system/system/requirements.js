@@ -4,18 +4,21 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
-// Paths
+// ========== Paths ==========
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const speedFile = path.join(__dirname, 'speedtest.txt');
 
-// Log start
-console.log("?? Checking Lite Node Requirements...");
+// ========== Log ==========
+console.log("🔍 Checking Lite Node Requirements...");
 
 // ========== 1. System Resources ==========
 
-// RAM (in GB)
 let RAM = 0;
+let DISK = 0;
+let CPU = 0;
+
+// RAM (in GB)
 try {
   const ramOut = execSync("free -g | awk '/^Mem:/{print $2}'").toString().trim();
   RAM = parseInt(ramOut, 10);
@@ -23,17 +26,15 @@ try {
   console.error("❌ Could not read RAM");
 }
 
-// Disk (in GB)
-let DISK = 0;
+// Available Disk Space (in GB) — changed to available instead of total
 try {
-  const diskOut = execSync("df -h / | awk 'NR==2 {print $2}' | sed 's/G//'").toString().trim();
-  DISK = parseFloat(diskOut);
+  const diskOut = execSync("df --output=avail -BG / | tail -1 | tr -dc '0-9'").toString().trim();
+  DISK = parseInt(diskOut, 10);
 } catch {
-  console.error("❌ Could not read disk size");
+  console.error("❌ Could not read available disk space");
 }
 
 // CPU Cores
-let CPU = 0;
 try {
   const cpuOut = execSync("nproc").toString().trim();
   CPU = parseInt(cpuOut, 10);
@@ -42,7 +43,6 @@ try {
 }
 
 // ========== 2. Internet Speed ==========
-
 let download = 0;
 let upload = 0;
 
@@ -55,17 +55,15 @@ if (fs.existsSync(speedFile)) {
   }
 }
 
-// ========== 3. Output Specs ==========
-
-console.log("?? System Specs:");
-console.log(`- RAM: ${RAM} GB`);
-console.log(`- DISK: ${DISK} GB`);
-console.log(`- CPU Cores: ${CPU}`);
+// ========== 3. Output ==========
+console.log("🖥️ System Specs:");
+console.log(`- RAM:            ${RAM} GB`);
+console.log(`- Disk Available: ${DISK} GB`);
+console.log(`- CPU Cores:      ${CPU}`);
 console.log(`- Download Speed: ${download} Mbps`);
 console.log(`- Upload Speed:   ${upload} Mbps`);
 
 // ========== 4. Check Requirements ==========
-
 let failed = false;
 
 if (RAM < 4) {
@@ -74,7 +72,7 @@ if (RAM < 4) {
 }
 
 if (DISK < 50) {
-  console.error("❌  Disk space requirement not met (Minimum 50GB)");
+  console.error("❌  Available disk space requirement not met (Minimum 50GB)");
   failed = true;
 }
 
@@ -89,8 +87,8 @@ if (upload < 5) {
 }
 
 if (failed) {
-  console.error("?? System does not meet requirements");
+  console.error("❌ System does not meet minimum requirements.");
   process.exit(1);
 } else {
-  console.log("✅  System meets all requirements");
+  console.log("✅  System meets all minimum requirements.");
 }
