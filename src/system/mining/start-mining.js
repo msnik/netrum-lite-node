@@ -8,7 +8,7 @@ import { fileURLToPath } from 'url';
 const API_URL = 'https://api.netrumlabs.com/api/node/mining/';
 const RPC_URL = 'https://mainnet.base.org';
 const CHAIN_ID = 8453; // Base Sepolia
-const POLL_INTERVAL = 2000; // 2 seconds
+const POLL_INTERVAL = 10000; // 10 seconds
 
 // Systemd logging setup
 process.stdout._handle.setBlocking(true);
