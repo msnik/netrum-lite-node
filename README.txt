@@ -1,9 +1,7 @@
-# 📦 Netrum Lite Node Setup
+# 📦 Netrum Lite Node Cli
 
 A lightweight decentralized compute node for the Netrum ecosystem.  
 This node generates a unique identity, secure wallet, and connects to Netrum server for mining task requests.
-
----
 
 ## 🛠️ Requirements
 
@@ -13,56 +11,47 @@ This node generates a unique identity, secure wallet, and connects to Netrum ser
 - Disk: 50+ GB SSD
 - CPU: 2+ cores
 
----
-
 ## 📥 Required Packages
 
-Install dependencies:
 
-```bash
-sudo apt update && sudo apt install -y curl bc jq nodejs npm
-```
+### Install dependencies:
+
+    ```bash
+     sudo apt update && sudo apt install -y curl bc jq speedtest-cli nodejs npm
+    ```
 
 ### Install Node.js v20 (recommended):
 
-```bash
-curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
-sudo apt install -y nodejs
-```
+    ```bash
+     curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+     sudo apt install -y nodejs
+    ```
 
 ### Check versions:
 
-```bash
-node -v   # ➤ should be v20.x.x
-npm -v    # ➤ should be 8.x.x or above
-```
+    ```bash
+     node -v 
+     npm -v
+    ```
 
-### Install `ethers.js` (inside wallet folder):
+### Now go to netrum-lite-node and install npm :
 
-```bash
-cd src/wallet
-npm init -y
-npm install ethers
-```
+    ```bash
+     npm install
+    ```
 
-##
-## 🚀 Step 1.
+### Now setup Nettum-Cli :
 
-```bash
-npm install
-```
+    ```bash
+     npm link
+    ```
 
-## Step 2.
+## Now Test Netrum-Cli :
 
-```bash
-npm link
-```
+    ```bash
+     netrum
+    ```
 
-## Step 3.
-
-```bash
-netrum
-```
 
 ### ✅ What It Does
 
