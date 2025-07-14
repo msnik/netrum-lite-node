@@ -93,7 +93,7 @@ async function sendClaimTransaction(privateKey, claimData) {
     chainId: CHAIN_ID
   });
   
-  console.log(`\n✅ Transaction sent: https://sepolia.basescan.org/tx/${tx.hash}`);
+  console.log(`\n✅ Transaction sent: https://basescan.org/tx/${tx.hash}`);
   console.log('⏳ Waiting for confirmation...');
   
   await tx.wait();
