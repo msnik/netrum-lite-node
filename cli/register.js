@@ -28,7 +28,7 @@ const errorRed = chalk.red.bold;
 // Custom orange spinner
 const orangeSpinner = {
   interval: 80,
-  frames: ["?? ", "?? ", "?? ", "?? "]
+  frames: ["⏳ ", "⏱️ ", "🔄 ", "🟠 "]
 };
 
 function showHeader() {
@@ -39,7 +39,7 @@ function showHeader() {
     )
   );
   console.log(
-    boxen(orange.bold('?? Node Registration Portal'), {
+    boxen(orange.bold('🟠 Node Registration Portal'), {
       padding: 1,
       margin: 1,
       borderStyle: 'round',
@@ -55,7 +55,7 @@ async function executeStep(stepName, command, args = [], cwd = __dirname) {
   }).start();
 
   try {
-    const child = spawn(command, args, { 
+    const child = spawn(command, args, {
       shell: true,
       cwd: path.dirname(resolvePath(cwd))
     });
@@ -103,11 +103,11 @@ async function registerNode() {
   showHeader();
   let NODE_WALLET, NODE_ID;
 
-  try  
+  try {
     // Step 1: Wallet initialization
-    console.log(orange.bold('\n?? Step 1: Wallet Initialization'));
+    console.log(orange.bold('\n⏳ Step 1: Wallet Initialization'));
     const walletSpinner = ora(orange('Reading wallet information...')).start();
-    
+
     try {
       const WALLET_FILE = resolvePath('../src/wallet/key.txt');
       if (fs.existsSync(WALLET_FILE)) {
@@ -115,7 +115,7 @@ async function registerNode() {
         NODE_WALLET = content.includes('address')
           ? JSON.parse(content).address
           : (await import('ethers')).Wallet.createRandom().address;
-        
+
         const NODE_ID_FILE = resolvePath('../src/identity/node-id/id.txt');
         NODE_ID = fs.readFileSync(NODE_ID_FILE, 'utf8');
         walletSpinner.succeed(darkOrange.bold(`Wallet: ${orange.bold(NODE_WALLET)}`));
@@ -129,60 +129,59 @@ async function registerNode() {
     }
 
     // Step 2: Network connection
-    console.log(orange.bold('\n?? Step 2: Network Connection'));
+    console.log(orange.bold('\n⏳ Step 2: Network Connection'));
     if (!await executeStep('Network Connect', 'node', [resolvePath('../src/system/animation/connecting.js')])) {
       process.exit(1);
     }
 
     // Step 3: Contract registration
-    console.log(orange.bold('\n?? Step 3: Contract Registration'));
+    console.log(orange.bold('\n⏳ Step 3: Contract Registration'));
     if (!await executeStep('Contract Register', 'node', [resolvePath('../src/contracts/lite-register.js')])) {
       process.exit(1);
     }
 
     // Step 4: Network connection
-    console.log(orange.bold('\n?? Step 4: Server Connection'));
+    console.log(orange.bold('\n⏳ Step 4: Server Connection'));
     if (!await executeStep('Server Connect', 'node', [resolvePath('../src/system/animation/connecting.js')])) {
       process.exit(1);
     }
 
     // Step 5: Server registration
-    console.log(orange.bold('\n?? Step 5: Server Registration'));
+    console.log(orange.bold('\n⏳ Step 5: Server Registration'));
     if (!await executeStep('Server Register', 'node', [resolvePath('../src/server/api-register.js')])) {
       process.exit(1);
     }
-    
+
     // Final success message
     console.log(
       boxen(
-        orangeGradient('?? Node Registration Complete!'),
+        orangeGradient('✅ Node Registration Complete!'),
         { padding: 1, borderColor: 'yellow' }
       )
     );
     console.log(orange.bold('\nNode Registration Details:'));
-    console.log(orange(`?? Wallet: ${darkOrange.bold(NODE_WALLET)}`));
-    console.log(orange(`?? Node ID: ${darkOrange.bold(NODE_ID)}\n`));
+    console.log(orange(`🟠 Wallet: ${darkOrange.bold(NODE_WALLET)}`));
+    console.log(orange(`🆔 Node ID: ${darkOrange.bold(NODE_ID)}\n`));
 
     // Step 6: Server Response
-    console.log(orange.bold('\n?? Step 6: Server Response'));
+    console.log(orange.bold('\n⏳ Step 6: Server Response'));
     if (!await executeStep('Server Response', 'node', [resolvePath('../src/system/animation/connecting.js')])) {
       process.exit(1);
     }
 
     // Step 7: Display registration data
-    console.log(orange.bold('\n?? Registration Response Data:'));
+    console.log(orange.bold('\n⏳ Registration Response Data:'));
     try {
       const REGISTER_DATA_FILE = resolvePath('../src/node-lite/data.txt');
       if (fs.existsSync(REGISTER_DATA_FILE)) {
         const rawData = fs.readFileSync(REGISTER_DATA_FILE, 'utf8');
         const data = JSON.parse(rawData);
-        
-        // Format and display the data beautifully
+
         console.log(boxen(
-          `?? Node ID: ${darkOrange(data.data.nodeId)}\n` +
-          `?? Wallet: ${darkOrange(data.data.wallet)}\n` +
-          `?? Signature: ${darkOrange(data.data.signature)}\n` +
-          `?? TX Hash: ${darkOrange(data.data.txHash)}`,
+          `🆔 Node ID: ${darkOrange(data.data.nodeId)}\n` +
+          `🟠 Wallet: ${darkOrange(data.data.wallet)}\n` +
+          `✍️ Signature: ${darkOrange(data.data.signature)}\n` +
+          `🔗 TX Hash: ${darkOrange(data.data.txHash)}`,
           {
             padding: 1,
             borderColor: 'yellow',
