@@ -5,7 +5,7 @@ import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const miningPath = path.join(__dirname, '../src/system/mining/mining.js');
+const miningPath = path.join(__dirname, '../src/system/mining/start-mining.js');
 
 // Help message
 if (process.argv.includes('--help') || process.argv.includes('-h')) {

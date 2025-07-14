@@ -10,7 +10,7 @@ const ROOT_DIR = path.join(__dirname, '../..');
 // Fixed paths - make sure these point to actual files, not directories
 const TX_HASH_PATH = path.join(__dirname, '../node-lite/register-tx-hash.txt'); // Fixed path
 const SIGN_FILE = path.join(__dirname, '../identity/sign/signMsg.txt'); // Fixed path
-const OUTPUT_FILE = path.join(__dirname, '../node-lite/register-data.txt'); // Fixed path
+const OUTPUT_FILE = path.join(__dirname, '../node-lite/data.txt'); // Fixed path
 
 function parseSignFile() {
   try {

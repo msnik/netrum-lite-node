@@ -62,7 +62,7 @@ async function registerLiteNode() {
     }
 
     // 4. Get encoded data from API
-    console.log("?? Preparing registration...");
+    console.log("🔍 Preparing registration...");
     const response = await fetch(API_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -85,13 +85,36 @@ async function registerLiteNode() {
     // Then try to parse as JSON
     const data = await response.json();
     
-    // 5. Send transaction with fee from API
-    console.log("?? Sending transaction...");
+    // 5. Check user balance before proceeding
+    const requiredFee = BigInt(data.feeWei);
+    console.log(`💵 You need ${ethers.formatEther(requiredFee)} ETH for Registration Fee`);
+    
+    const balance = await provider.getBalance(wallet.address);
+    console.log(`💰 Your current balance: ${ethers.formatEther(balance)} ETH`);
+    
+    if (balance < requiredFee) {
+      console.log("❌ Insufficient balance for registration fee");
+      console.log("ℹ️ Please deposit more ETH and try again");
+      return { error: "Insufficient balance", requiredFee: requiredFee.toString() };
+    }
+    
+    // 6. Ask for user confirmation
+    console.log("\n⚠️ WARNING: This will send a transaction with the following details:");
+    console.log(`- To: ${CONTRACT_ADDRESS}`);
+    console.log(`- Value: ${ethers.formatEther(requiredFee)} ETH`);
+    console.log(`- Estimated Gas: ${data.estimatedGas}`);
+    
+    // In a real CLI application, you might want actual user confirmation here
+    // For now, we'll proceed automatically since this is a script
+    console.log("\n⏳ Proceeding with transaction...");
+    
+    // 7. Send transaction with fee from API
+    console.log("📤 Sending transaction...");
     const tx = await wallet.sendTransaction({
-      to: CONTRACT_ADDRESS, // Use the contract address directly
+      to: CONTRACT_ADDRESS,
       data: data.encodedData,
       gasLimit: BigInt(data.estimatedGas),
-      value: BigInt(data.feeWei) // Use fee from API response
+      value: requiredFee
     });
 
     console.log("⏳ Waiting for confirmation...");
@@ -112,5 +135,11 @@ async function registerLiteNode() {
 registerLiteNode().then(result => {
   if (result?.alreadyRegistered) {
     console.log("No action needed - already registered");
+  } else if (result?.error === "Insufficient balance") {
+    console.log(`Please deposit at least ${ethers.formatEther(result.requiredFee)} ETH and try again`);
+  } else if (result?.error) {
+    console.log("Registration failed");
+  } else if (result?.success) {
+    console.log(`Transaction hash: ${result.txHash}`);
   }
 });

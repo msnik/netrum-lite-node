@@ -103,15 +103,9 @@ async function registerNode() {
   showHeader();
   let NODE_WALLET, NODE_ID;
 
-  try {
-    // Step 1: System check
-    console.log(orange.bold('\n?? Step 1: System Requirements Check'));
-    if (!await executeStep('System Check', 'node', [resolvePath('../system/system/system.js')])) {
-      process.exit(1);
-    }
-
-    // Step 2: Wallet initialization
-    console.log(orange.bold('\n?? Step 2: Wallet Initialization'));
+  try  
+    // Step 1: Wallet initialization
+    console.log(orange.bold('\n?? Step 1: Wallet Initialization'));
     const walletSpinner = ora(orange('Reading wallet information...')).start();
     
     try {
@@ -134,30 +128,30 @@ async function registerNode() {
       process.exit(1);
     }
 
-    // Step 3: Balance check
-    console.log(orange.bold('\n?? Step 3: Wallet Balance Check'));
-    if (!await executeStep('Balance Check', 'node', [resolvePath('../wallet/balance.js')])) {
-      process.exit(1);
-    }
-
-    // Step 4: Network connection
-    console.log(orange.bold('\n?? Step 4: Network Connection'));
+    // Step 2: Network connection
+    console.log(orange.bold('\n?? Step 2: Network Connection'));
     if (!await executeStep('Network Connect', 'node', [resolvePath('../system/animation/connecting.js')])) {
       process.exit(1);
     }
 
-    // Step 5: Contract registration
-    console.log(orange.bold('\n?? Step 5: Contract Registration'));
+    // Step 3: Contract registration
+    console.log(orange.bold('\n?? Step 3: Contract Registration'));
     if (!await executeStep('Contract Register', 'node', [resolvePath('../contracts/lite-register.js')])) {
       process.exit(1);
     }
 
-    // Step 6: Server registration
-    console.log(orange.bold('\n?? Step 6: Server Registration'));
-    if (!await executeStep('Server Register', 'node', [resolvePath('../server/api-register.js')])) {
+    // Step 4: Network connection
+    console.log(orange.bold('\n?? Step 4: Server Connection'));
+    if (!await executeStep('Server Connect', 'node', [resolvePath('../system/animation/connecting.js')])) {
       process.exit(1);
     }
 
+    // Step 5: Server registration
+    console.log(orange.bold('\n?? Step 5: Server Registration'));
+    if (!await executeStep('Server Register', 'node', [resolvePath('../server/api-register.js')])) {
+      process.exit(1);
+    }
+    
     // Final success message
     console.log(
       boxen(
@@ -169,10 +163,16 @@ async function registerNode() {
     console.log(orange(`?? Wallet: ${darkOrange.bold(NODE_WALLET)}`));
     console.log(orange(`?? Node ID: ${darkOrange.bold(NODE_ID)}\n`));
 
-    // Step 7: Display registration data
-    console.log(orange.bold('\n?? Registration Data:'));
+    // Step 5: Server Response
+    console.log(orange.bold('\n?? Step 5: Server Response'));
+    if (!await executeStep('Server Response', 'node', [resolvePath('../system/animation/connecting.js')])) {
+      process.exit(1);
+    }
+
+    // Step 6: Display registration data
+    console.log(orange.bold('\n?? Registration Response Data:'));
     try {
-      const REGISTER_DATA_FILE = resolvePath('register-data.txt');
+      const REGISTER_DATA_FILE = resolvePath('./data.txt');
       if (fs.existsSync(REGISTER_DATA_FILE)) {
         const rawData = fs.readFileSync(REGISTER_DATA_FILE, 'utf8');
         const data = JSON.parse(rawData);
