@@ -69,8 +69,8 @@ async function checkBalance() {
     // === Display with better formatting
     console.log(`📋 Wallet Summary:`);
     console.log(`├─ Address: ${address}`);
-    console.log(`├─ ETH Balance: ${balanceEth.toFixed(6)} ETH`);
-    console.log(`└─ NPT Balance: ${tokenBalance.toFixed(2)} NPT`);
+    console.log(`├─ ETH Balance: ${balanceEth.toFixed(8)} ETH`);
+    console.log(`└─ NPT Balance: ${tokenBalance.toFixed(8)} NPT`);
 
     // Balance check with color indication
     if (balanceEth < MINIMUM_BALANCE) {
