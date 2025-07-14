@@ -4,7 +4,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 
 /* ---------- config ---------- */
-const API_URL = 'https://api.netrumlabs.com/api/node/live-log';
+const API_URL = 'https://api.netrumlabs.com/api/node/mining/live-log/';
 const POLL_MS  = 5000;                       // 5 sec
 
 /* ---------- logging ---------- */
