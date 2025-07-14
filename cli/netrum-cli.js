@@ -27,6 +27,8 @@ const pad = Math.max(...entries.map(([cmd]) => cmd.length)) + 2;
 
 const descriptionMap = {
   "netrum-system":        "System status & logs",
+  "netrum-new-wallet":    "Create / new a wallet",
+  "netrum-import-wallet": "Create / import a wallet",
   "netrum-wallet":        "Create / inspect a wallet",
   "netrum-wallet-key":    "Export private key",
   "netrum-wallet-remove": "Delete wallet files",

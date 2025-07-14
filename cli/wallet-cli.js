@@ -6,7 +6,7 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const filePath = path.join(__dirname, '../src/wallet/wallet.js');
+const filePath = path.join(__dirname, '../src/wallet/balance.js');
 
 // If user runs --help
 if (process.argv.includes('--help') || process.argv.includes('-h')) {
@@ -19,7 +19,6 @@ Usage:
 
 Description:
   Manage your Netrum Lite Node wallet.
-  - Generate or import wallet
   - View ETH & NPT balance
 `);
   process.exit(0);
