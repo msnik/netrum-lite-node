@@ -46,7 +46,7 @@ async function main() {
 
     // Live monitoring loop
     syslog('?? Starting live monitoring');
-    console.log('\n?? Live Mining Logs (updates every 2 seconds):');
+    console.log('\n?? Live Mining Logs (updates every 10 seconds):');
     console.log('----------------------------------------');
     
     while (true) {
