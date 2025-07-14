@@ -54,6 +54,9 @@ async function main() {
       
       // Prepare log data
       const stats = formatStats(liveInfo);
+
+      // Log to systemd  
+      syslog(`MINING STATUS | ${stats.oneLine}`);
       
       // Display to console in one line
       process.stdout.write('\x1Bc'); // Clear terminal
