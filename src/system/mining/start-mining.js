@@ -58,13 +58,9 @@ async function main() {
       // Log to systemd
       syslog(`MINING STATUS | ${stats.oneLine}`);
       
-      // Display to console
+      // Display to console in one line
       process.stdout.write('\x1Bc'); // Clear terminal
-      console.log(`
-⏱️  Time Remaining: ${stats.timeRemaining}
-${stats.progressBar} ${stats.percentComplete}%
-?? Stats: ${stats.oneLine}
-      `);
+      console.log(` ⏱️ ${stats.timeRemaining} | ${stats.percentComplete} | Stats: > ${stats.oneLine}`);
       
       // Exit loop if mining session ended
       if (!liveInfo.isActive && isMining) {
