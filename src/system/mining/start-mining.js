@@ -28,7 +28,7 @@ async function main() {
     // Load wallet
     const { address, privateKey } = await loadWallet();
     const shortAddress = `${address.slice(0,6)}...${address.slice(-4)}`;
-    syslog(`?? Mining Node: ${address}`);
+    syslog(`⚒️ Mining Node: ${address}`);
     console.log(`?? Mining Node: ${shortAddress}\n`);
 
     // Initial setup
@@ -37,16 +37,16 @@ async function main() {
     // Check if we need to start mining
     const { txData, liveInfo } = await getMiningData(address);
     if (txData && !liveInfo.isActive) {
-      syslog('?? Starting mining session...');
-      console.log('?? Starting mining session...');
+      syslog('⛏️ Starting mining session...');
+      console.log('⛏️ Starting mining session...');
       await submitTransaction(privateKey, { ...txData, chainId: CHAIN_ID });
       isMining = true;
       await new Promise(resolve => setTimeout(resolve, 5000));
     }
 
     // Live monitoring loop
-    syslog('?? Starting live monitoring');
-    console.log('\n?? Live Mining Logs (updates every 10 seconds):');
+    syslog('⚒️ Starting live monitoring');
+    console.log('\n⛏️ Live Mining Logs (updates every 10 seconds):');
     console.log('----------------------------------------');
     
     while (true) {
@@ -55,12 +55,9 @@ async function main() {
       // Prepare log data
       const stats = formatStats(liveInfo);
       
-      // Log to systemd
-      syslog(`MINING STATUS | ${stats.oneLine}`);
-      
       // Display to console in one line
       process.stdout.write('\x1Bc'); // Clear terminal
-      console.log(` ⏱️ ${stats.timeRemaining} | ${stats.percentComplete} | Stats: > ${stats.oneLine}`);
+      console.log(`⛏️ ${stats.timeRemaining} | ${stats.percentComplete} | Stats: > ${stats.oneLine}`);
       
       // Exit loop if mining session ended
       if (!liveInfo.isActive && isMining) {
