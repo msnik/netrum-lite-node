@@ -8,8 +8,8 @@ import readline from 'readline/promises';
 
 // Configuration
 const API_URL = 'https://api.netrumlabs.com/api/node/mining/claim/';
-const RPC_URL = 'https://sepolia.base.org';
-const CHAIN_ID = 84532;
+const RPC_URL = 'https://mainnet.base.org';
+const CHAIN_ID = 8453;
 
 // Get paths
 const __filename = fileURLToPath(import.meta.url);
