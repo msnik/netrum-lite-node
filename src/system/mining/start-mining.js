@@ -29,7 +29,7 @@ async function main() {
     const { address, privateKey } = await loadWallet();
     const shortAddress = `${address.slice(0,6)}...${address.slice(-4)}`;
     syslog(`⚒️ Mining Node: ${address}`);
-    console.log(`?? Mining Node: ${shortAddress}\n`);
+    console.log(`⛏️ Mining Node: ${shortAddress}\n`);
 
     // Initial setup
     let isMining = false;
