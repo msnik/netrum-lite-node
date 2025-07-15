@@ -1,80 +1,81 @@
 #!/usr/bin/env node
-import axios     from 'axios';
-import os        from 'os';
-import fs        from 'fs';
+
+import { createRequire } from 'module';
+const require = createRequire(import.meta.url);
+
+import os from 'os';
+import fs from 'fs';
+import axios from 'axios';
 import diskusage from 'diskusage';
-import speedTest from 'speedtest-net';
 
-const API_URL       = 'https://api.netrumlabs.com/api/node/metrics/sync/';
-const SYNC_INTERVAL = 5000;          // 5 sec
-const SPEED_REFRESH = 12 * 60 * 1000; 
+const speedTest = require('speedtest-net');
 
-// ---------------- Systemd-friendly log -------------
-process.stdout._handle.setBlocking(true);
-process.stderr._handle.setBlocking(true);
+const API_URL = 'https://api.netrumlabs.com/api/node/metrics/sync/';
+const SYNC_INTERVAL = 5000;
+
 function log(msg) {
   process.stderr.write(`[${new Date().toISOString()}] ${msg}\n`);
 }
 
-// ---------------- Collect metrics -----------------
-const REQUIREMENTS = { RAM: 4, CORES: 2, STORAGE: 50 };
-
-let cachedSpeed = 0;
-async function refreshSpeed() {
+function getSystemInfo(speed) {
   try {
-    const res = await speedTest({ maxTime: 5000 });
-    cachedSpeed = Math.round(res.download.bandwidth / 125000); // Bytes/s → Mbps
-    log(`Internet speed refreshed: ${cachedSpeed} Mbps`);
-  } catch {
-    // speed test fail → 0 Mbps
-    cachedSpeed = 0;
+    const cores = os.cpus().length;
+    const ram = os.totalmem() / (1024 ** 2); // in MB
+    const disk = diskusage.checkSync('/').free / (1024 ** 3); // in GB
+
+    return {
+      cpu: cores,
+      ram: Math.round(ram),
+      disk: Math.round(disk),
+      speed: Math.round(speed),
+      lastSeen: Math.floor(Date.now() / 1000),
+    };
+  } catch (err) {
+    return null;
   }
 }
 
-refreshSpeed();
-
-setInterval(refreshSpeed, SPEED_REFRESH);
-
-function collectMetrics() {
-  const cores   = os.cpus().length;
-  const ramGB   = os.totalmem() / 1024 ** 3;
-  const diskGB  = diskusage.checkSync('/').free / 1024 ** 3;
-
-  return {
-    cpu   : cores,
-    ram   : Math.round(ramGB  * 1024),   // MB 
-    disk  : Math.round(diskGB),          // GB
-    speed : cachedSpeed,                 // Mbps
-  };
+async function getSpeedMbps() {
+  try {
+    const result = await speedTest({ acceptLicense: true, acceptGdpr: true });
+    const mbps = result.download.bandwidth / 125000; // Convert bytes/sec to Mbps
+    return mbps;
+  } catch (err) {
+    log('⚠️ Speedtest failed, setting speed = 0');
+    return 0;
+  }
 }
 
-function deriveStatus({ cpu, ram, disk }) {
-  const ok =
-    cpu          >= REQUIREMENTS.CORES   &&
-    ram / 1024   >= REQUIREMENTS.RAM     && // MB → GB
-    disk         >= REQUIREMENTS.STORAGE;
-  return ok ? 'Active' : 'InActive';
-}
-
-// ---------------- Main sync function ---------------
 async function syncWithServer() {
   try {
-    const nodeId     = fs.readFileSync('../../identity/node-id/id.txt', 'utf8').trim();
-    const nodeMetrics = collectMetrics();
-    const nodeStatus  = deriveStatus(nodeMetrics);
+    const nodeId = fs.readFileSync('../../identity/node-id/id.txt', 'utf8').trim();
 
-    const res = await axios.post(API_URL, { nodeId, nodeMetrics, nodeStatus });
-    if (res.data.log) log(res.data.log);
+    const speed = await getSpeedMbps();
+    const metrics = getSystemInfo(speed);
+
+    if (!metrics) {
+      log('❌ Failed to get system info');
+      return;
+    }
+
+    const response = await axios.post(API_URL, {
+      nodeId,
+      nodeMetrics: metrics,
+      nodeStatus: (metrics.cpu >= 2 && metrics.ram >= 4096 && metrics.disk >= 50) ? 'Active' : 'InActive'
+    });
+
+    if (response.data.log) {
+      log(response.data.log);
+    }
   } catch (err) {
     if (err.response?.data?.error === 'Not Registered') {
-      log('⛔ Node not registered on server');
+      log('❌ Node not registered');
     } else {
-      log(`⚠️ Sync error: ${err.message}`);
+      log('❌ Sync error: ' + err.message);
     }
   }
 }
 
-// ---------------- Bootstrap -------------------------
-log('🚀 Netrum Node Sync Service started');
+log('🚀 Netrum Node Sync Service Started...');
 syncWithServer();
 setInterval(syncWithServer, SYNC_INTERVAL);
