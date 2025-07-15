@@ -12,29 +12,29 @@
 
  ### 🧰 Hardware Requirements
 
- | Component       | Minimum            | Recommended        |
- |-----------------|--------------------|--------------------|
- | **CPU**         | 2 Cores            | 2+ Cores           |
- | **RAM**         | 4 GB               | 6 GB or more       |
- | **Disk Space**  | 50 GB SSD          | 100 GB SSD         |
+   | Component       | Minimum            | Recommended        |
+   |-----------------|--------------------|--------------------|
+   | **CPU**         | 2 Cores            | 2+ Cores           |
+   | **RAM**         | 4 GB               | 6 GB or more       |
+   | **Disk Space**  | 50 GB SSD          | 100 GB SSD         |
 
- > 💡 SSD storage is highly recommended for faster performance and node stability.
+   > 💡 SSD storage is highly recommended for faster performance and node stability.
+
 
  ### 🌐 Network Requirements
 
- | Type              | Minimum Speed     |
- |-------------------|-------------------|
- | **Download**      | 10 Mbps           |
- | **Upload**        | 10 Mbps           |
+   | Type              | Minimum Speed     |
+   |-------------------|-------------------|
+   | **Download**      | 10 Mbps           |
+   | **Upload**        | 10 Mbps           |
 
- > ✅ A stable and fast internet connection is important for uptime sync, mining tasks, and daily reward claims.
+   > ✅ A stable and fast internet connection is important for uptime sync, mining tasks, and daily reward claims.
 
 
 
 
 # ✨ Features of Netrum Lite Node
-
-## Here are the key features of the Netrum Lite Node CLI:
+  - Here are the key features of the Netrum Lite Node CLI:
 
  ### 🔐 Secure Wallet Management
    - Create or import an EVM-compatible wallet
