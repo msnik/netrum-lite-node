@@ -11,7 +11,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 // === Constants
 const RPC_URL = "https://mainnet.base.org/";
 const MINIMUM_BALANCE = 0.00001; // ETH
-const NPT_CONTRACT_ADDRESS = "0x81eb5897F829860A199ca63189f9E8D553cE5121";
+const NPT_CONTRACT_ADDRESS = "0xB8c2CE84F831175136cebBFD48CE4BAb9c7a6424";
 
 // === ERC-20 ABI for balanceOf
 const ERC20_ABI = [
