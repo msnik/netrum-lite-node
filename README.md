@@ -5,6 +5,7 @@
 
  - Ideal for VPS and low-resource devices, this node is designed for fast setup, full transparency, and passive token rewards.
 
+---
 
 # 🖥️ Hardware & Network Requirements
 
@@ -30,6 +31,8 @@
 
       > ✅ A stable and fast internet connection is important for uptime sync, mining tasks, and daily reward claims.
 
+
+--- 
 
 # ⚙️ Netrum Lite Node – Setup Guide
 
@@ -113,6 +116,8 @@
        Run netrum <command> --help for command-specific options.
      ```
 
+---
+
  ## 🧪 How to Use Netrum CLI Commands
 
  - 1. Check your system hardware and internet speed  
@@ -141,74 +146,73 @@
 
  - 5. Generate your Node ID
 
-  ```bash
-  netrum-node-id
-  ```
+   ```bash
+   netrum-node-id
+   ```
 
  - 6. Create a signed identity message
 
-  ```bash
-  netrum-node-sign
-  ```
+   ```bash
+   netrum-node-sign
+   ```
 
  - 7. Register your node on-chain (requires 0.0002–0.0005 BASE as gas fee)
 
-  ```bash
-  netrum-node-register
-  ```
+   ```bash
+   netrum-node-register
+   ```
 
  - 8. Sync your node with the Netrum server
 
-  ```bash
-  netrum-sync
-  ```
+   ```bash
+   netrum-sync
+   ```
 
  - 9. View real-time sync logs
       
-  ```bash
-  netrum-sync-log
-  ```
+   ```bash
+   netrum-sync-log
+   ```
 
  - 10. Start mining NPT tokens
 
-  ```bash
-  netrum-mining
-  ```
+   ```bash
+   netrum-mining
+   ```
 
  - 11. View real-time mining logs
 
-  ```bash
-  netrum-mining-log
-  ```
+   ```bash
+   netrum-mining-log
+   ```
 
  - 12. Claim mined tokens after 24 hours (requires ~0.00002–0.00003 BASE gas)
 
-  ```bash
-  netrum-claim
-  ```
+   ```bash
+   netrum-claim
+   ```
 
    > After claiming, mining will auto-restart. You can claim every 24 hours.
 Check token balance using the wallet command below:
 
  - 13. Check wallet info (balance, address, etc.)
 
-  ```bash
-  netrum-wallet
-  ```
+   ```bash
+   netrum-wallet
+   ```
 
  - 14. View private and public key of your wallet
 
-  ```bash
-  netrum-wallet-key
-  ```
+   ```bash
+   netrum-wallet-key
+   ```
 
  - 15. Remove wallet from local system (⚠️ backup first!)
 
-  ```bash
-  netrum-wallet-remove
-  ```
-
-
+   ```bash
+   netrum-wallet-remove
+   ```
+---
 
 
 # ✨ Features of Netrum Lite Node
