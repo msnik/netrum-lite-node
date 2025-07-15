@@ -41,6 +41,7 @@
     "log-update": "^6.1.0",
     "node-fetch": "^3.3.2",
     "ora": "^8.2.0",
-    "readline-sync": "^1.4.10"
+    "readline-sync": "^1.4.10",
+    "speedtest-net": "^2.2.0"
   }
 }
