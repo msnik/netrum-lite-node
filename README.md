@@ -118,7 +118,7 @@
 
 ---
 
- ## 🧪 How to Use Netrum CLI Commands
+# 🧪 How to Use Netrum CLI Commands
 
  - 1. Check your system hardware and internet speed  
 
@@ -252,3 +252,26 @@ Check token balance using the wallet command below:
    - CLI-based interface (easy for developers and node operators)
    - Low resource usage — perfect for basic VPS setups
    - Quick setup in less than 5 minutes
+
+
+---
+
+## 🛠️ Support
+
+If you face any errors while setting up your wallet, registering your node, or during mining:
+
+➡️ **Join the official Netrum Discord for help and community support:**
+
+🔗 [https://discord.gg/Mv6uKBKCZM](https://discord.gg/Mv6uKBKCZM)
+
+The team and community members are active and ready to assist you.
+
+---
+
+## ⚠️ Disclaimer
+
+This software is in early development and is part of the Netrum testnet/lite-node program.  
+Use at your own risk. Make sure to securely store your private keys and never share them with anyone.  
+Any loss of tokens due to incorrect usage, deletion of files, or private key leaks is your responsibility.
+
+---
