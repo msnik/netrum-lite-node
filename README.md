@@ -38,19 +38,19 @@
     ### 1️⃣ Clone the Repository
 
      ```bash
-      git clone https://github.com/NetrumLabs/netrum-lite-node.git
+     git clone https://github.com/NetrumLabs/netrum-lite-node.git
      ```
      
     ### 2️⃣ Navigate to Project Directory
 
      ```bash
-       cd netrum-lite-node
+     cd netrum-lite-node
      ```
 
     ### 3️⃣ Install Required Dependencies
 
      ```bash
-      sudo apt update && sudo apt install -y curl bc jq speedtest-cli nodejs npm
+     sudo apt update && sudo apt install -y curl bc jq speedtest-cli nodejs npm
      ```
      
     ### 4️⃣ (Recommended) Install Node.js v20
@@ -58,32 +58,32 @@
      - Check your current Node version:
 
      ```bash
-      node -v
+     node -v
      ```
 
      > If not v20.x.x, install it:
 
      ```bash
-      curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
-      sudo apt install -y nodejs
+     curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+     sudo apt install -y nodejs
      ```
 
     ### 5️⃣ Install Project Dependencies
 
      ```bash
-      npm install
+     npm install
      ```
 
     ### 6️⃣ Link the CLI Globally
 
      ```bash
-      npm link
+     npm link
      ```
 
     ### 7️⃣ Test the CLI
 
      ```bash
-      netrum
+     netrum
      ```
 
      > You should see the Netrum Lite Node CLI interface.
