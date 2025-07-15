@@ -10,7 +10,7 @@
 
  - To run the Netrum Lite Node smoothly, make sure your system meets the following minimum requirements:
 
- ### 🧰 Hardware Requirements
+  ### 🧰 Hardware Requirements
 
    | Component       | Minimum            | Recommended        |
    |-----------------|--------------------|--------------------|
@@ -21,7 +21,7 @@
    > 💡 SSD storage is highly recommended for faster performance and node stability.
 
 
- ### 🌐 Network Requirements
+  ### 🌐 Network Requirements
 
    | Type              | Minimum Speed     |
    |-------------------|-------------------|
