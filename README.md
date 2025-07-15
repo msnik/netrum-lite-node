@@ -53,7 +53,7 @@
     ### 3️⃣ Install Required Dependencies
 
      ```bash
-     sudo apt update && sudo apt install -y curl bc jq speedtest-cli nodejs npm axios diskusage speedtest-net
+     sudo apt update && sudo apt install -y curl bc jq speedtest-cli nodejs npm
      ```
      
     ### 4️⃣ (Recommended) Install Node.js v20
