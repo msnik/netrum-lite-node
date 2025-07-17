@@ -1,4 +1,4 @@
-# 🧠 What is Netrum Lite Node CLI?
+# What is Netrum Lite Node CLI?
 
  - Netrum Lite Node CLI is a lightweight command-line tool that allows anyone to participate in the Netrum decentralized compute network.
  - It securely creates a wallet, connects to the Netrum server, registers the node on-chain, syncs uptime data, mines NPT tokens, and allows daily token claiming — all from your terminal.
@@ -7,11 +7,11 @@
 
 ---
 
-# 🖥️ Hardware & Network Requirements
+#  Hardware & Network Requirements
 
  - To run the Netrum Lite Node smoothly, make sure your system meets the following minimum requirements:
 
-   ### 🧰 Hardware Requirements
+   ### Hardware Requirements
 
       | Component       | Minimum            | Recommended        |
       |-----------------|--------------------|--------------------|
@@ -19,44 +19,44 @@
       | **RAM**         | 4 GB               | 6 GB or more       |
       | **Disk Space**  | 50 GB SSD          | 100 GB SSD         |
 
-      > 💡 SSD storage is highly recommended for faster performance and node stability.
+       SSD storage is highly recommended for faster performance and node stability.
 
 
-   ### 🌐 Network Requirements
+   ### Network Requirements
 
       | Type              | Minimum Speed     |
       |-------------------|-------------------|
       | **Download**      | 10 Mbps           |
       | **Upload**        | 10 Mbps           |
 
-      > ✅ A stable and fast internet connection is important for uptime sync, mining tasks, and daily reward claims.
+      > A stable and fast internet connection is important for uptime sync, mining tasks, and daily reward claims.
 
 
 --- 
 
-# ⚙️ Netrum Lite Node – Setup Guide
+# Netrum Lite Node – Setup Guide
 
   - Follow these steps to install and run the Netrum Lite Node CLI on Ubuntu/Linux:
 
-    ### 1️⃣ Clone the Repository
+    ### Clone the Repository
 
      ```bash
      git clone https://github.com/NetrumLabs/netrum-lite-node.git
      ```
      
-    ### 2️⃣ Navigate to Project Directory
+    ###  Navigate to Project Directory
 
      ```bash
      cd netrum-lite-node
      ```
 
-    ### 3️⃣ Install Required Dependencies
+    ### Install Required Dependencies
 
      ```bash
      sudo apt update && sudo apt install -y curl bc jq speedtest-cli nodejs npm
      ```
      
-    ### 4️⃣ (Recommended) Install Node.js v20
+    ### (Recommended) Install Node.js v20
 
      - Check your current Node version:
 
@@ -71,19 +71,19 @@
      sudo apt install -y nodejs
      ```
 
-    ### 5️⃣ Install Project Dependencies
+    ### Install Project Dependencies
 
      ```bash
      npm install
      ```
 
-    ### 6️⃣ Link the CLI Globally
+    ### Link the CLI Globally
 
      ```bash
      npm link
      ```
 
-    ### 7️⃣ Test the CLI
+    ### Test the CLI
 
      ```bash
      netrum
@@ -118,140 +118,56 @@
 
 ---
 
-# 🧪 How to Use Netrum CLI Commands
+# How to Use Netrum CLI Commands
 
- - 1. Check your system hardware and internet speed  
-
-   ```bash
-   netrum-system
-   ```
-
- - 2. Create a new wallet
-
-   ```bash
-   netrum-new-wallet
-   ```
-
- - 3. Import an existing wallet
-
-   ```bash
-   netrum-import-wallet
-   ```
-
- - 4. Check your Base domain username in the wallet
-
-   ```bash
-   netrum-check-basename
-   ```
-
- - 5. Generate your Node ID
-
-   ```bash
-   netrum-node-id
-   ```
-
- - 6. Create a signed identity message
-
-   ```bash
-   netrum-node-sign
-   ```
-
- - 7. Register your node on-chain (requires 0.0002–0.0005 BASE as gas fee)
-
-   ```bash
-   netrum-node-register
-   ```
-
- - 8. Sync your node with the Netrum server
-
-   ```bash
-   netrum-sync
-   ```
-
- - 9. View real-time sync logs
-      
-   ```bash
-   netrum-sync-log
-   ```
-
- - 10. Start mining NPT tokens
-
-   ```bash
-   netrum-mining
-   ```
-
- - 11. View real-time mining logs
-
-   ```bash
-   netrum-mining-log
-   ```
-
- - 12. Claim mined tokens after 24 hours (requires ~0.00002–0.00003 BASE gas)
-
-   ```bash
-   netrum-claim
-   ```
-
-   > After claiming, mining will auto-restart. You can claim every 24 hours.
-Check token balance using the wallet command below:
-
- - 13. Check wallet info (balance, address, etc.)
-
-   ```bash
-   netrum-wallet
-   ```
-
- - 14. View private and public key of your wallet
-
-   ```bash
-   netrum-wallet-key
-   ```
-
- - 15. Remove wallet from local system (⚠️ backup first!)
-
-   ```bash
-   netrum-wallet-remove
-   ```
----
+**`netrum-system` :** This command checks your VPS system status, including CPU, RAM, and internet speed. Use it to make sure your machine meets the basic requirements before setup.
+**`netrum-new-wallet` :** Creates a new EVM-compatible wallet directly from the CLI. It will generate your public address and private key, all of which you should store securely.
+**`netrum-import-wallet` :** Allows you to import an existing wallet by entering your private key. This is useful if you already have a Base domain tied to a wallet you control.
+**`netrum-check-basename` :** Checks whether your current wallet has a registered Base domain name. Your Base name will also become your Netrum Node ID.
+**`netrum-node-id` :** Displays the current Node ID associated with your wallet. This is your official node identity on the Netrum network.
+**`netrum-node-sign` :** Generates a signed identity message using your wallet's private key. This signature verifies that you own the node and wallet.
+**`netrum-node-register` :** Registers your node on-chain and with the backend system. This step requires a small amount of BASE for gas (typically between 0.0002 and 0.0005 BASE).
+**`netrum-sync` :** Starts the syncing process between your node and the Netrum network. This keeps your node active and eligible to earn mining rewards.
+**`netrum-sync-log` :** Displays real-time logs showing your sync status, heartbeat signals, and activity tracking. Use this to confirm your node is working correctly.
+**`netrum-mining` :** Begins the mining process for NPT tokens. Your node will now start earning rewards based on uptime and active sync.
+**`netrum-mining-log` :** Shows live mining logs and confirms whether your node is earning tokens correctly. This is useful for monitoring daily activity
+**`netrum-claim` :** Lets you claim your mined NPT tokens after 24 hours of uptime. Once claimed, mining will automatically restart. This step requires a small amount of BASE for gas (around 0.00002 to 0.00003 BASE).
+**`netrum-wallet` :** Displays wallet information including your public address and NPT balance. Use this to check if your mined rewards have been received.
+**`netrum-wallet-key` :** Reveals both the public and private keys of your wallet. Only use this in a secure environment and never share your private key.
+**`netrum-wallet-remove` :** Deletes your wallet from the local VPS. Make sure to back up your private key or seed phrase before running this command, as this action cannot be undone.
 
 
-# ✨ Features of Netrum Lite Node
-  - Here are the key features of the Netrum Lite Node CLI:
 
- ### 🔐 Secure Wallet Management
-   - Create or import an EVM-compatible wallet
-   - Wallet stored locally (never shared externally)
-   - Private key stays safe in your system
+# Features of Netrum Lite Node
+These are the core capabilities of the Netrum Lite Node CLI, designed for speed, simplicity, and transparency.
 
- ### 🆔 Unique Node Identity
-   - Generates a unique Node ID like `netrum.lite.base.username`
-   - Connects with base domain and signs identity message
-   - Fully verifiable by Netrum server and smart contract
+### Secure Wallet Management 
+- You can create a new EVM-compatible wallet or import an existing one directly through the CLI.
+Wallets are stored locally on your VPS, and your private key is never exposed or sent externally.
 
- ### 📡 Server Sync & Uptime Tracking
-   - Maintains real-time sync with Netrum backend
-   - Tracks uptime to ensure fairness and reward eligibility
-   - Auto-connects on restart (ideal for VPS)
+### Unique Node Identity 
+- Each node generates a unique identity like `netrum.lite.base.username`, linked to your Base domain.
+This identity is signed and verified both by Netrum’s backend and the on-chain smart contract.
 
- ### ⛓️ On-Chain Registration
-   - Registers your node directly on the smart contract
-   - Links your wallet and Node ID to the blockchain
-   - Ensures full transparency and decentralized ownership
+### Server Sync & Uptime Tracking 
+- The node maintains a real-time connection with the Netrum backend to report uptime and status.
+Your uptime is continuously tracked to determine mining eligibility and is preserved across restarts.
 
- ### ⛏️ Live NPT Token Mining
-   - Mines NPT tokens based on uptime and participation
-   - Uses on-chain proof-of-activity mechanism
-   - No hardware mining required — just uptime!
+### On-Chain Registration 
+- Your node is registered directly on a smart contract, ensuring your wallet and Node ID are verifiably linked.
+This brings full transparency, decentralized ownership, and traceability to the entire setup.
 
- ### 🕒 Daily Reward Claim
-   - Claim your mined tokens every 24 hours
-   - All claims are on-chain and directly go to your wallet
-   - Simple one-command claiming process
+### Live NPT Token Mining 
+- NPT tokens are mined based on your node’s uptime and contribution to the network.There’s no hardware mining involved, just consistent uptime and on-chain proof-of-participation.
 
- ### ⚙️ Lightweight & Easy to Use
-   - CLI-based interface (easy for developers and node operators)
-   - Low resource usage — perfect for basic VPS setups
-   - Quick setup in less than 5 minutes
+### Daily Reward Claim
+- You can claim your mined NPT tokens every 24 hours through a simple one-line command.
+Each claim is recorded on-chain, and tokens are sent directly to your connected wallet.
+
+### Lightweight & Easy to Use
+- The CLI is fast, intuitive, and optimized for both developers and first-time node runners.
+It runs smoothly on low-resource VPS machines and can be fully set up in under five minutes.
+
 
 
 ---
@@ -260,7 +176,7 @@ Check token balance using the wallet command below:
 
 If you face any errors while setting up your wallet, registering your node, or during mining:
 
-➡️ **Join the official Netrum Discord for help and community support:**
+➡ **Join the official Netrum Discord for help and community support:**
 
 🔗 [https://discord.gg/Mv6uKBKCZM](https://discord.gg/Mv6uKBKCZM)
 
@@ -270,8 +186,6 @@ The team and community members are active and ready to assist you.
 
 ## ⚠️ Disclaimer
 
-This software is in early development and is part of the Netrum testnet/lite-node program.  
-Use at your own risk. Make sure to securely store your private keys and never share them with anyone.  
-Any loss of tokens due to incorrect usage, deletion of files, or private key leaks is your responsibility.
+This software is in early development and is part of the Netrum testnet/lite-node program. Use at your own risk. Make sure to securely store your private keys and never share them with anyone. Any loss of tokens due to incorrect usage, deletion of files, or private key leaks is your responsibility.
 
 ---
