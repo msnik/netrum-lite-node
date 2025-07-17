@@ -120,49 +120,49 @@
 
 # How to Use Netrum CLI Commands
 
-**`netrum-system` :** This command checks your VPS system status, including CPU, RAM, and internet speed. Use it to make sure your machine meets the basic requirements before setup.
+- **`netrum-system` :** This command checks your VPS system status, including CPU, RAM, and internet speed. Use it to make sure your machine meets the basic requirements before setup.
 
 
-**`netrum-new-wallet` :** Creates a new EVM-compatible wallet directly from the CLI. It will generate your public address and private key, all of which you should store securely.
+- **`netrum-new-wallet` :** Creates a new EVM-compatible wallet directly from the CLI. It will generate your public address and private key, all of which you should store securely.
 
 
-**`netrum-import-wallet` :** Allows you to import an existing wallet by entering your private key. This is useful if you already have a Base domain tied to a wallet you control.
+- **`netrum-import-wallet` :** Allows you to import an existing wallet by entering your private key. This is useful if you already have a Base domain tied to a wallet you control.
 
 
-**`netrum-check-basename` :** Checks whether your current wallet has a registered Base domain name. Your Base name will also become your Netrum Node ID.
+- **`netrum-check-basename` :** Checks whether your current wallet has a registered Base domain name. Your Base name will also become your Netrum Node ID.
 
 
-**`netrum-node-id` :** Displays the current Node ID associated with your wallet. This is your official node identity on the Netrum network.
+- **`netrum-node-id` :** Displays the current Node ID associated with your wallet. This is your official node identity on the Netrum network.
 
 
-**`netrum-node-sign` :** Generates a signed identity message using your wallet's private key. This signature verifies that you own the node and wallet.
+- **`netrum-node-sign` :** Generates a signed identity message using your wallet's private key. This signature verifies that you own the node and wallet.
 
 
-**`netrum-node-register` :** Registers your node on-chain and with the backend system. This step requires a small amount of BASE for gas (typically between 0.0002 and 0.0005 BASE).
+- **`netrum-node-register` :** Registers your node on-chain and with the backend system. This step requires a small amount of BASE for gas (typically between 0.0002 and 0.0005 BASE).
 
 
-**`netrum-sync` :** Starts the syncing process between your node and the Netrum network. This keeps your node active and eligible to earn mining rewards.
+- **`netrum-sync` :** Starts the syncing process between your node and the Netrum network. This keeps your node active and eligible to earn mining rewards.
 
 
-**`netrum-sync-log` :** Displays real-time logs showing your sync status, heartbeat signals, and activity tracking. Use this to confirm your node is working correctly.
+- **`netrum-sync-log` :** Displays real-time logs showing your sync status, heartbeat signals, and activity tracking. Use this to confirm your node is working correctly.
 
 
-**`netrum-mining` :** Begins the mining process for NPT tokens. Your node will now start earning rewards based on uptime and active sync.
+- **`netrum-mining` :** Begins the mining process for NPT tokens. Your node will now start earning rewards based on uptime and active sync.
 
 
-**`netrum-mining-log` :** Shows live mining logs and confirms whether your node is earning tokens correctly. This is useful for monitoring daily activity
+- **`netrum-mining-log` :** Shows live mining logs and confirms whether your node is earning tokens correctly. This is useful for monitoring daily activity
 
 
-**`netrum-claim` :** Lets you claim your mined NPT tokens after 24 hours of uptime. Once claimed, mining will automatically restart. This step requires a small amount of BASE for gas (around 0.00002 to 0.00003 BASE).
+- **`netrum-claim` :** Lets you claim your mined NPT tokens after 24 hours of uptime. Once claimed, mining will automatically restart. This step requires a small amount of BASE for gas (around 0.00002 to 0.00003 BASE).
 
 
-**`netrum-wallet` :** Displays wallet information including your public address and NPT balance. Use this to check if your mined rewards have been received.
+- **`netrum-wallet` :** Displays wallet information including your public address and NPT balance. Use this to check if your mined rewards have been received.
 
 
-**`netrum-wallet-key` :** Reveals both the public and private keys of your wallet. Only use this in a secure environment and never share your private key.
+- **`netrum-wallet-key` :** Reveals both the public and private keys of your wallet. Only use this in a secure environment and never share your private key.
 
 
-**`netrum-wallet-remove` :** Deletes your wallet from the local VPS. Make sure to back up your private key or seed phrase before running this command, as this action cannot be undone.
+- **`netrum-wallet-remove` :** Deletes your wallet from the local VPS. Make sure to back up your private key or seed phrase before running this command, as this action cannot be undone.
 
 
 
