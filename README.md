@@ -169,30 +169,30 @@
 # Features of Netrum Lite Node
 These are the core capabilities of the Netrum Lite Node CLI, designed for speed, simplicity, and transparency.
 
-### Secure Wallet Management 
+### 1. Secure Wallet Management 
 - You can create a new EVM-compatible wallet or import an existing one directly through the CLI.
 Wallets are stored locally on your VPS, and your private key is never exposed or sent externally.
 
-### Unique Node Identity 
+### 2. Unique Node Identity 
 - Each node generates a unique identity like `netrum.lite.base.username`, linked to your Base domain.
 This identity is signed and verified both by Netrum’s backend and the on-chain smart contract.
 
-### Server Sync & Uptime Tracking 
+### 3. Server Sync & Uptime Tracking 
 - The node maintains a real-time connection with the Netrum backend to report uptime and status.
 Your uptime is continuously tracked to determine mining eligibility and is preserved across restarts.
 
-### On-Chain Registration 
+### 4. On-Chain Registration 
 - Your node is registered directly on a smart contract, ensuring your wallet and Node ID are verifiably linked.
 This brings full transparency, decentralized ownership, and traceability to the entire setup.
 
-### Live NPT Token Mining 
+### 5. Live NPT Token Mining 
 - NPT tokens are mined based on your node’s uptime and contribution to the network.There’s no hardware mining involved, just consistent uptime and on-chain proof-of-participation.
 
-### Daily Reward Claim
+### 6. Daily Reward Claim
 - You can claim your mined NPT tokens every 24 hours through a simple one-line command.
 Each claim is recorded on-chain, and tokens are sent directly to your connected wallet.
 
-### Lightweight & Easy to Use
+### 7. Lightweight & Easy to Use
 - The CLI is fast, intuitive, and optimized for both developers and first-time node runners.
 It runs smoothly on low-resource VPS machines and can be fully set up in under five minutes.
 
