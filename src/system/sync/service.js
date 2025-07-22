@@ -2,6 +2,7 @@
 
 import os from 'os';
 import fs from 'fs';
+import path from 'path';
 import axios from 'axios';
 import diskusage from 'diskusage';
 
@@ -35,7 +36,14 @@ function getSystemInfo() {
 async function syncWithServer() {
   log('🔄 Syncing with server...');
   try {
-    const nodeId = fs.readFileSync('../../identity/node-id/id.txt', 'utf8').trim();
+    const idFilePath = path.resolve('/root/netrum-lite-node/src/identity/node-id/id.txt');
+
+    if (!fs.existsSync(idFilePath)) {
+      log(`❌ id.txt not found at ${idFilePath}`);
+      return;
+    }
+
+    const nodeId = fs.readFileSync(idFilePath, 'utf8').trim();
     const metrics = getSystemInfo();
 
     if (!metrics) {
