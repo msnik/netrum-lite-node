@@ -9,7 +9,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // === Path to basename.txt ===
-const basenamePath = path.join(__dirname, 'basename.txt');
+const basenamePath = path.join(__dirname, './basename.txt');
 
 // === Check for basename.txt ===
 if (!fs.existsSync(basenamePath)) {
