@@ -8,6 +8,7 @@ import { fileURLToPath } from 'url';
 const API_URL = 'https://api.netrumlabs.com/api/node/mining/start-mining/';
 const RPC_URL = 'https://mainnet.base.org';
 const CHAIN_ID = 8453;               // Base Mainnet
+const DELAY_MS = 5000;               // ⏱️ Delay before API call in milliseconds
 
 /* ---------- logging ---------- */
 process.stdout._handle.setBlocking(true);
@@ -31,6 +32,10 @@ async function loadWallet() {
     const short = `${address.slice(0, 6)}...${address.slice(-4)}`;
     log(`⛏️ Node: ${address}`);
     console.log(`⛏️ Mining Node: ${short}`);
+
+    /* --- delay before API --- */
+    log(`⏳ Waiting ${DELAY_MS / 1000} seconds before contacting API...`);
+    await new Promise((r) => setTimeout(r, DELAY_MS));
 
     /* --- hit start-mining API --- */
     const res = await fetch(API_URL, {
