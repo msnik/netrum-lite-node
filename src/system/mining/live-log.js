@@ -5,7 +5,7 @@ import { fileURLToPath } from 'url';
 
 /* ---------- config ---------- */
 const API_URL = 'https://api.netrumlabs.com/api/node/mining/live-log/';
-const POLL_MS  = 5000;                       // 5 sec
+const POLL_MS  = 60000;                       // 50 sec
 
 /* ---------- logging ---------- */
 process.stdout._handle.setBlocking(true);
