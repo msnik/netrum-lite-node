@@ -36,7 +36,7 @@ const fmtTime = (s) => {
   try {
     const address = await loadAddress();
     log(`📡 Live log started for ${address}`);
-    console.log('⏱️ Live Mining Log (5s refresh)\n--------------------------------');
+    console.log('⏱️ Live Mining Log (1minute refresh)\n--------------------------------');
 
     while (true) {
       const res = await fetch(API_URL, {
