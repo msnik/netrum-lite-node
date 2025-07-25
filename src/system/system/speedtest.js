@@ -22,7 +22,7 @@ async function runSpeedTest() {
   // 🥇 Try speedtest-cli
   try {
     console.log("📡 Running speedtest-cli...");
-    const output = execSync("speedtest-cli --secure --simple", { timeout: 30000 }).toString();
+    const output = execSync("speedtest-cli --secure", { timeout: 30000 }).toString();
     const download = parseFloat((output.match(/Download:\s+([\d.]+)/) || [])[1]);
     const upload = parseFloat((output.match(/Upload:\s+([\d.]+)/) || [])[1]);
 
