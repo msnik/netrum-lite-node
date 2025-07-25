@@ -5,7 +5,6 @@ import { fileURLToPath } from 'url';
 
 /* ---------- config ---------- */
 const API_URL = 'https://api.netrumlabs.com/api/node/mining/live-log/';
-const POLL_MS  = 60000;                       // 50 sec
 
 /* ---------- logging ---------- */
 process.stdout._handle.setBlocking(true);
@@ -31,38 +30,48 @@ const fmtTime = (s) => {
   return `${h}h ${m}m ${sec}s`;
 };
 
-/* ---------- loop ---------- */
+async function poll(address) {
+  try {
+    const res = await fetch(API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ nodeAddress: address })
+    }).then((r) => r.json());
+
+    if (!res.success) throw new Error(res.error || 'API error');
+
+    const info = res.liveInfo;
+    const line = `⏱️ ${fmtTime(info.timeRemaining)} | ${info.percentComplete.toFixed(2)}% | `
+               + `Stats: > Mined: ${fmtTokens(info.minedTokens)} NPT | `
+               + `Speed: ${fmtTokens(info.speedPerSec)}/s | `
+               + `Status: ${info.isActive ? '✅ ACTIVE' : '❌ INACTIVE'}`;
+
+    // Clear terminal + print one-liner
+    process.stdout.write('\x1Bc');
+    console.log(line);
+
+    if (!info.isActive && info.timeRemaining === 0) {
+      log('⏹️ Mining finished');
+      process.exit(0);
+    }
+  } catch (err) {
+    log(`❌ ${err.message}`);
+  }
+
+  // Random wait (0 - 10 min)
+  const randomDelay = Math.floor(Math.random() * 10 * 60 * 1000);
+  log(`⏳ Next poll in ${(randomDelay / 1000).toFixed(0)} seconds`);
+  setTimeout(() => poll(address), randomDelay);
+}
+
+/* ---------- main ---------- */
 (async () => {
   try {
     const address = await loadAddress();
     log(`📡 Live log started for ${address}`);
-    console.log('⏱️ Live Mining Log (1minute refresh)\n--------------------------------');
+    console.log('⏱️ Live Mining Log (random interval within 10 minutes)\n--------------------------------');
 
-    while (true) {
-      const res = await fetch(API_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ nodeAddress: address })
-      }).then((r) => r.json());
-
-      if (!res.success) throw new Error(res.error || 'API error');
-
-      const info = res.liveInfo;
-      const line = `⏱️ ${fmtTime(info.timeRemaining)} | ${info.percentComplete.toFixed(2)}% | `
-                 + `Stats: > Mined: ${fmtTokens(info.minedTokens)} NPT | `
-                 + `Speed: ${fmtTokens(info.speedPerSec)}/s | `
-                 + `Status: ${info.isActive ? '✅ ACTIVE' : '❌ INACTIVE'}`;
-
-      /* clear terminal + print one-liner */
-      process.stdout.write('\x1Bc');
-      console.log(line);
-
-      if (!info.isActive && info.timeRemaining === 0) {
-        log('⏹️ Mining finished');
-        break;
-      }
-      await new Promise((r) => setTimeout(r, POLL_MS));
-    }
+    await poll(address);
   } catch (err) {
     log(`❌ ${err.message}`);
     process.exit(1);
